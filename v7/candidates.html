@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Know Your Candidates - Let's Go Vote</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;700;900&family=Poppins:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f7ff;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+    }
+
+
+    .tile {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: tileEntrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      /* aspect-ratio: 1/1; */
+      /* Make tiles square */
+    }
+
+    .tile:hover {
+      transform: translateY(-18px);
+      box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15),
+        0 15px 15px -5px rgba(0, 0, 0, 0.08);
+      z-index: 10;
+    }
+
+    @keyframes tileEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+      }
+
+      70% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.02);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Checkmark animation */
+    .checkmark {
+      display: inline-block;
+      transform-origin: center;
+      animation: checkmarkBounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes checkmarkBounce {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.2);
+      }
+    }
+
+    /* Language button animations */
+    .lang-btn {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .lang-btn::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: transform 0.5s, opacity 0.5s;
+    }
+
+    .lang-btn:hover::after {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .lang-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 14px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    .lang-btn.active {
+      transform: translateY(0);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Flag icons */
+    .flag-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Floating arrow animation */
+    .floating-arrow {
+      animation: floatUpDown 2s ease-in-out infinite;
+    }
+
+    .tile-border {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tile-border::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      animation: borderGlow 2s linear infinite;
+    }
+
+    @keyframes borderGlow {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    @keyframes floatUpDown {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(90deg, #ffffff, #a5f3fc, #ffffff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-size: 200% auto;
+      animation: gradientText 3s linear infinite;
+    }
+
+    @keyframes gradientText {
+      0% {
+        background-position: 0% center;
+      }
+
+      100% {
+        background-position: 200% center;
+      }
+    }
+
+    /* Glow effect */
+    .glow-effect {
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Fade in animation */
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .delay-1 {
+      animation-delay: 0.3s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.6s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.9s;
+    }
+
+    .delay-4 {
+      animation-delay: 1.2s;
+    }
+
+    /* Arrow animation */
+    .arrow-animation {
+      animation: arrowMove 1.5s ease-in-out infinite;
+    }
+
+    @keyframes arrowMove {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(5px);
+      }
+    }
+
+    /* Highlight effect */
+    .highlight-text {
+      position: relative;
+      display: inline-block;
+    }
+
+    .highlight-text::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+    }
+
+    /* Timeline styles */
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 1.5rem;
+      width: 4px;
+      background: linear-gradient(to bottom, #3b82f6, #6366f1);
+      border-radius: 4px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 3.5rem;
+      padding-bottom: 2rem;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 0;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background-color: #fff;
+      border: 4px solid #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+    }
+
+    .timeline-dot.warning {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3);
+    }
+
+    .timeline-dot.danger {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3);
+    }
+
+    .timeline-dot.past {
+      border-color: #9ca3af;
+      box-shadow: 0 0 0 4px rgba(156, 163, 175, 0.3);
+    }
+
+    .timeline-content {
+      background-color: #fff;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-content:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .timeline-date {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .date-upcoming {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
+    .date-warning {
+      background-color: #fef3c7;
+      color: #d97706;
+    }
+
+    .date-danger {
+      background-color: #fee2e2;
+      color: #dc2626;
+    }
+
+    .date-past {
+      background-color: #e5e7eb;
+      color: #6b7280;
+    }
+
+    .timeline-days {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 0.5rem;
+    }
+
+    .days-warning {
+      color: #f59e0b;
+    }
+
+    .days-danger {
+      color: #ef4444;
+    }
+
+    .days-past {
+      color: #9ca3af;
+    }
+
+    /* Pulse animation for timeline dots */
+    .pulse-dot {
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+
+    .pulse-dot.warning {
+      animation: pulseWarning 2s infinite;
+    }
+
+    @keyframes pulseWarning {
+      0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+      }
+    }
+
+    .pulse-dot.danger {
+      animation: pulseDanger 2s infinite;
+    }
+
+    @keyframes pulseDanger {
+      0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+      }
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f7ff;
+      scroll-behavior: smooth;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    .tile {
+      opacity: 0;
+      transform: translateY(40px);
+      animation: tileEntrance 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      /* aspect-ratio: 1/1; */
+      /* Make tiles square */
+    }
+
+    .tile:hover {
+      transform: translateY(-18px);
+      box-shadow: 0 25px 30px -5px rgba(0, 0, 0, 0.15),
+        0 15px 15px -5px rgba(0, 0, 0, 0.08);
+      z-index: 10;
+    }
+
+    @keyframes tileEntrance {
+      0% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.9);
+      }
+
+      70% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.02);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .nav-link:hover {
+      color: #1a56db;
+      transition: all 0.3s ease;
+    }
+
+    .icon-pulse {
+      animation: iconPulse 2s infinite;
+    }
+
+    @keyframes iconPulse {
+      0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+      }
+
+      50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5));
+      }
+
+      100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+      }
+    }
+
+    .tile-border {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tile-border::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      animation: borderGlow 2s linear infinite;
+    }
+
+    @keyframes borderGlow {
+      0% {
+        left: -100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    .visitor-counter {
+      display: inline-flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+    }
+
+    .counter-digit {
+      display: inline-block;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      line-height: 1.5rem;
+      text-align: center;
+      border-radius: 0.25rem;
+      margin: 0 0.125rem;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    /* Fixed language toggle */
+    .fixed-language-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .fixed-language-toggle.scrolled {
+      top: 10px;
+      right: 10px;
+      transform: scale(0.9);
+    }
+
+    .language-dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .language-dropdown:hover .language-dropdown-content {
+      display: block;
+    }
+
+    .language-option {
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .language-option:hover {
+      background-color: #f0f7ff;
+    }
+
+    /* Event card styles */
+    .event-card {
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .event-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .event-date {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #1e40af;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-image {
+      transition: all 0.5s ease;
+    }
+
+    .event-card:hover .event-image {
+      transform: scale(1.05);
+    }
+
+    /* Hero banner animation */
+    .hero-banner {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% {
+        left: -100%;
+      }
+
+      20% {
+        left: 100%;
+      }
+
+      100% {
+        left: 100%;
+      }
+    }
+
+    .hero-content {
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Countdown clock animations */
+    .countdown-clock {
+      transition: all 0.3s ease;
+    }
+
+    .countdown-clock:hover {
+      transform: translateY(-5px);
+    }
+
+    .countdown-urgent {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+      }
+    }
+
+    .countdown-warning {
+      animation: pulseWarning 2s infinite;
+    }
+
+    @keyframes pulseWarning {
+      0% {
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(217, 119, 6, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(217, 119, 6, 0);
+      }
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f7ff;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    .montserrat {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Checkmark animation */
+    .checkmark {
+      display: inline-block;
+      transform-origin: center;
+      animation: checkmarkBounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes checkmarkBounce {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.2);
+      }
+    }
+
+    /* Fade in animation */
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .delay-1 {
+      animation-delay: 0.3s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.6s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.9s;
+    }
+
+    /* Input focus effect */
+    .input-focus-effect {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .input-focus-effect:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    }
+
+    /* Official card hover effect */
+    .official-card {
+      transition: all 0.3s ease;
+    }
+
+    .official-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Shimmer loading effect */
+    .shimmer {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    .state-level::before {
+      background-color: #3b82f6;
+    }
+
+    .county-level::before {
+      background-color: #10b981;
+    }
+
+    .city-level::before {
+      background-color: #f59e0b;
+    }
+
+    .district-level::before {
+      background-color: #8b5cf6;
+    }
+
+    /* Collapsible section animation */
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .collapsible-content.open {
+      max-height: 2000px;
+      transition: max-height 0.5s ease-in;
+    }
+
+    /* Rotate arrow */
+    .arrow-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .arrow-icon.open {
+      transform: rotate(180deg);
+    }
+
+    /* Pulse animation */
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+
+    /* Hierarchy styling */
+    .hierarchy-container {
+      position: relative;
+    }
+
+    .hierarchy-line {
+      position: absolute;
+      left: 5px;
+      top: 24px;
+      bottom: 0;
+      width: 2px;
+      background-color: #e5e7eb;
+    }
+
+    .hierarchy-item {
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .hierarchy-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 24px;
+      width: 12px;
+      height: 2px;
+      background-color: #e5e7eb;
+    }
+
+    .hierarchy-bullet {
+      position: absolute;
+      left: 0;
+      top: 18px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="./index.html">
+        <div class="text-2xl font-bold text-blue-800">
+          <span class="cursive">Let's Go</span> Vote
+        </div>
+      </a>
+      <div class="hidden md:flex space-x-6">
+        <a href="./candidates.html" class="font-medium hover:text-blue-600 transition">Know Your Candidates</a>
+        <a href="./register-to-vote.html" class="font-medium hover:text-blue-600 transition">Register to Vote</a>
+        <a href="./where-to-vote.html" class="font-medium hover:text-blue-600 transition">Where to Vote</a>
+        <!-- <a href="./events" class="font-medium hover:text-blue-600 transition">Events</a> -->
+        <a href="./understand-ballot.html" class="font-medium hover:text-blue-600 transition">Understand Ballot</a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button class="text-blue-800">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="bg-gradient-to-r from-blue-600 to-indigo-700 py-12 md:py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 montserrat tracking-tight">
+          Know Your Candidates
+        </h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Enter your ZIP code to discover who represents you and who's running in upcoming elections.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8 md:py-12">
+    <!-- ZIP Code Input Section -->
+    <div class="max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8 mb-10">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Find Your Representatives</h2>
+
+      <form id="zipForm" class="space-y-4">
+        <div>
+          <label for="zip" class="block text-sm font-medium text-gray-700 mb-1">Enter Your ZIP Code</label>
+          <input type="text" id="zip" name="zip"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus-effect focus:outline-none text-lg"
+            placeholder="77002" maxlength="5">
+          <p class="text-sm text-gray-500 mt-1">Example: 77002</p>
+        </div>
+
+        <div class="flex justify-center pt-4">
+          <button type="submit" id="findButton"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd" />
+            </svg>
+            Find My Representatives
+          </button>
+        </div>
+
+        <div class="text-center text-sm text-gray-500 pt-2">
+          Your ZIP code is only used to find your representatives and is not stored.
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Section (Initially Hidden) -->
+    <div id="resultsSection" class="max-w-5xl mx-auto hidden">
+      <!-- Loading State -->
+      <div id="loadingState" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
+        <p class="text-lg text-gray-600">Searching for your representatives...</p>
+      </div>
+
+      <!-- Results Content -->
+      <div id="resultsContent" class="hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Your Representatives</h2>
+          <p id="zipSummary" class="text-gray-600 mb-6">Based on ZIP code: <span class="font-medium">77002</span>
+            (Downtown Houston, Harris County, Texas)</p>
+
+          <!-- Legend -->
+          <div class="flex flex-wrap gap-4 mb-6 bg-gray-50 p-4 rounded-lg">
+            <div class="flex items-center">
+              <span class="w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
+              <span class="text-sm">State</span>
+            </div>
+            <div class="flex items-center">
+              <span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+              <span class="text-sm">County</span>
+            </div>
+            <div class="flex items-center">
+              <span class="w-3 h-3 rounded-full bg-amber-500 mr-2"></span>
+              <span class="text-sm">City</span>
+            </div>
+            <div class="flex items-center">
+              <span class="w-3 h-3 rounded-full bg-purple-500 mr-2"></span>
+              <span class="text-sm">District</span>
+            </div>
+          </div>
+
+          <!-- Hierarchical Results -->
+          <div class="hierarchy-container">
+            <!-- Texas State -->
+            <div class="mb-8">
+              <div class="collapsible-header flex justify-between items-center bg-blue-50 p-4 rounded-lg cursor-pointer"
+                data-target="stateOfficials">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none"
+                      viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                    </svg>
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-800">Texas State</h3>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 arrow-icon" viewBox="0 0 20 20"
+                  fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div id="stateOfficials" class="collapsible-content open">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <!-- Governor -->
+                  <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                    <div class="flex items-start">
+                      <div class="flex-shrink-0 mr-4">
+                        <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="text-lg font-bold text-gray-800  state-level">Greg Abbott</h4>
+                        <p class="text-blue-600 font-medium">Governor</p>
+                        <p class="text-gray-600 text-sm mt-1">Republican Party</p>
+                        <div class="mt-3 space-y-1">
+                          <p class="text-sm"><span class="font-medium">Phone:</span> (512) 463-2000</p>
+                          <p class="text-sm"><span class="font-medium">Email:</span> governor@gov.texas.gov</p>
+                          <div class="flex space-x-2 mt-2">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Lieutenant Governor -->
+                  <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                    <div class="flex items-start">
+                      <div class="flex-shrink-0 mr-4">
+                        <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="text-lg font-bold text-gray-800  state-level">Dan Patrick</h4>
+                        <p class="text-blue-600 font-medium">Lieutenant Governor</p>
+                        <p class="text-gray-600 text-sm mt-1">Republican Party</p>
+                        <div class="mt-3 space-y-1">
+                          <p class="text-sm"><span class="font-medium">Phone:</span> (512) 463-0001</p>
+                          <p class="text-sm"><span class="font-medium">Email:</span> ltgov@ltgov.texas.gov</p>
+                          <div class="flex space-x-2 mt-2">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- U.S. Senator 1 -->
+                  <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                    <div class="flex items-start">
+                      <div class="flex-shrink-0 mr-4">
+                        <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="text-lg font-bold text-gray-800  state-level">Ted Cruz</h4>
+                        <p class="text-blue-600 font-medium">U.S. Senator</p>
+                        <p class="text-gray-600 text-sm mt-1">Republican Party</p>
+                        <div class="mt-3 space-y-1">
+                          <p class="text-sm"><span class="font-medium">Phone:</span> (202) 224-5922</p>
+                          <p class="text-sm"><span class="font-medium">Email:</span> senator@cruz.senate.gov</p>
+                          <div class="flex space-x-2 mt-2">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- U.S. Senator 2 -->
+                  <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                    <div class="flex items-start">
+                      <div class="flex-shrink-0 mr-4">
+                        <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="text-lg font-bold text-gray-800  state-level">John Cornyn</h4>
+                        <p class="text-blue-600 font-medium">U.S. Senator</p>
+                        <p class="text-gray-600 text-sm mt-1">Republican Party</p>
+                        <div class="mt-3 space-y-1">
+                          <p class="text-sm"><span class="font-medium">Phone:</span> (202) 224-2934</p>
+                          <p class="text-sm"><span class="font-medium">Email:</span> senator@cornyn.senate.gov</p>
+                          <div class="flex space-x-2 mt-2">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- State Senator -->
+                  <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                    <div class="flex items-start">
+                      <div class="flex-shrink-0 mr-4">
+                        <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="text-lg font-bold text-gray-800  state-level">John Whitmire</h4>
+                        <p class="text-blue-600 font-medium">State Senator - District 15</p>
+                        <p class="text-gray-600 text-sm mt-1">Democratic Party</p>
+                        <div class="mt-3 space-y-1">
+                          <p class="text-sm"><span class="font-medium">Phone:</span> (512) 463-0115</p>
+                          <p class="text-sm"><span class="font-medium">Email:</span> john.whitmire@senate.texas.gov</p>
+                          <div class="flex space-x-2 mt-2">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- State Representative -->
+                  <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                    <div class="flex items-start">
+                      <div class="flex-shrink-0 mr-4">
+                        <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                            viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <h4 class="text-lg font-bold text-gray-800  state-level">Christina Morales</h4>
+                        <p class="text-blue-600 font-medium">State Representative - District 145</p>
+                        <p class="text-gray-600 text-sm mt-1">Democratic Party</p>
+                        <div class="mt-3 space-y-1">
+                          <p class="text-sm"><span class="font-medium">Phone:</span> (512) 463-0732</p>
+                          <p class="text-sm"><span class="font-medium">Email:</span> christina.morales@house.texas.gov
+                          </p>
+                          <div class="flex space-x-2 mt-2">
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            <span class="text-gray-300">|</span>
+                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Harris County (Nested) -->
+              <div class="hierarchy-item mt-8">
+                <div class="hierarchy-bullet bg-green-500"></div>
+                <div class="hierarchy-line"></div>
+                <div
+                  class="collapsible-header flex justify-between items-center bg-green-50 p-4 rounded-lg cursor-pointer"
+                  data-target="countyOfficials">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">Harris County</h3>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 arrow-icon" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div id="countyOfficials" class="collapsible-content open">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <!-- County Judge -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  county-level">Lina Hidalgo</h4>
+                          <p class="text-blue-600 font-medium">County Judge</p>
+                          <p class="text-gray-600 text-sm mt-1">Democratic Party</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 274-7000</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span> judge.hidalgo@cjo.hctx.net</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- County Commissioner -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  county-level">Rodney Ellis</h4>
+                          <p class="text-blue-600 font-medium">County Commissioner - Precinct 1</p>
+                          <p class="text-gray-600 text-sm mt-1">Democratic Party</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 274-1000</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span> comm_ellis@cp1.hctx.net</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- District Attorney -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  county-level">Kim Ogg</h4>
+                          <p class="text-blue-600 font-medium">District Attorney</p>
+                          <p class="text-gray-600 text-sm mt-1">Democratic Party</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 274-5800</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span> da@dao.hctx.net</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Sheriff -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  county-level">Ed Gonzalez</h4>
+                          <p class="text-blue-600 font-medium">Sheriff</p>
+                          <p class="text-gray-600 text-sm mt-1">Democratic Party</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 274-5000</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span> sheriff@sheriff.hctx.net</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- City of Houston (Nested) -->
+              <div class="hierarchy-item mt-8">
+                <div class="hierarchy-bullet bg-amber-500"></div>
+                <div class="hierarchy-line"></div>
+                <div
+                  class="collapsible-header flex justify-between items-center bg-amber-50 p-4 rounded-lg cursor-pointer"
+                  data-target="cityOfficials">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">City of Houston</h3>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 arrow-icon" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div id="cityOfficials" class="collapsible-content open">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <!-- Mayor -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  city-level">Sylvester Turner
+                          </h4>
+                          <p class="text-blue-600 font-medium">Mayor</p>
+                          <p class="text-gray-600 text-sm mt-1">Nonpartisan</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 837-0311</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span> mayor@houstontx.gov</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- City Controller -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  city-level">Chris Brown</h4>
+                          <p class="text-blue-600 font-medium">City Controller</p>
+                          <p class="text-gray-600 text-sm mt-1">Nonpartisan</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (832) 393-3460</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span> controller@houstontx.gov
+                            </p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- City Council Member -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  city-level">Robert Gallegos
+                          </h4>
+                          <p class="text-blue-600 font-medium">City Council Member - District I</p>
+                          <p class="text-gray-600 text-sm mt-1">Nonpartisan</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (832) 393-3011</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span> districtI@houstontx.gov</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Facebook</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Police Chief -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  city-level">Troy Finner</h4>
+                          <p class="text-blue-600 font-medium">Police Chief</p>
+                          <p class="text-gray-600 text-sm mt-1">Houston Police Department</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 884-3131</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span>
+                              police.chief@houstonpolice.org</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Fire Chief -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  city-level">Samuel Peña</h4>
+                          <p class="text-blue-600 font-medium">Fire Chief</p>
+                          <p class="text-gray-600 text-sm mt-1">Houston Fire Department</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (832) 394-6700</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span> fire.chief@houstontx.gov
+                            </p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Municipal Court Judge -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  city-level">J. Elaine
+                            Marshall</h4>
+                          <p class="text-blue-600 font-medium">Presiding Judge</p>
+                          <p class="text-gray-600 text-sm mt-1">Houston Municipal Courts</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 247-5464</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span>
+                              municipal.courts@houstontx.gov</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <!-- Houston ISD (Nested) -->
+              <div class="hierarchy-item mt-8">
+                <div class="hierarchy-bullet bg-purple-500"></div>
+                <div class="hierarchy-line"></div>
+                <div
+                  class="collapsible-header flex justify-between items-center bg-purple-50 p-4 rounded-lg cursor-pointer"
+                  data-target="districtOfficials">
+                  <div class="flex items-center">
+                    <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path
+                          d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+                      </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">Houston ISD</h3>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 arrow-icon" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div id="districtOfficials" class="collapsible-content open">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <!-- Superintendent -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  district-level">Millard
+                            House II</h4>
+                          <p class="text-blue-600 font-medium">Superintendent</p>
+                          <p class="text-gray-600 text-sm mt-1">Houston Independent School District</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 556-6300</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span>
+                              superintendent@houstonisd.org</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- School Board Member -->
+                    <div class="official-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                      <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-4">
+                          <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full text-gray-400"
+                              viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                clip-rule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div class="flex-1">
+                          <h4 class="text-lg font-bold text-gray-800  district-level">Judith
+                            Cruz</h4>
+                          <p class="text-blue-600 font-medium">School Board Trustee - District VIII</p>
+                          <p class="text-gray-600 text-sm mt-1">Houston Independent School District</p>
+                          <div class="mt-3 space-y-1">
+                            <p class="text-sm"><span class="font-medium">Phone:</span> (713) 556-6000</p>
+                            <p class="text-sm"><span class="font-medium">Email:</span>
+                              judith.cruz@houstonisd.org</p>
+                            <div class="flex space-x-2 mt-2">
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Website</a>
+                              <span class="text-gray-300">|</span>
+                              <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">Twitter</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Button - Only New Search -->
+          <div class="flex justify-center mt-8">
+            <button id="newSearch"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                  clip-rule="evenodd" />
+              </svg>
+              New Search
+            </button>
+          </div>
+        </div>
+
+        <!-- No Results State -->
+        <div id="noResultsState" class="hidden text-center py-12 bg-white rounded-xl shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">No Representatives Found</h3>
+          <p class="text-gray-600 mb-6">We couldn't find representatives for the ZIP code you entered. Please check your
+            ZIP code and try again.</p>
+          <button id="tryAgainBtn"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between">
+        <div class="mb-6 md:mb-0">
+          <h3 class="text-xl font-bold mb-4">
+            <span class="cursive">Let's Go</span> Vote
+          </h3>
+          <p class="text-gray-400">Empowering citizens through voter education.</p>
+
+          <!-- Visitor Counter -->
+          <div class="mt-4">
+            <div class="visitor-counter">
+              <span class="mr-2">Visitors:</span>
+              <span id="visitorCount" class="flex">
+                <span class="counter-digit">2</span>
+                <span class="counter-digit">1</span>
+                <span class="counter-digit">4</span>
+                <span class="counter-digit">0</span>
+                <span class="counter-digit">1</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-bold mb-4">Resources</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white">Understand Ballot</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Events</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Know Your Candidate</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">Connect</h4>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z" />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+        <p>&copy; 2025 Let's Go Vote. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Form submission
+      const zipForm = document.getElementById('zipForm');
+      const resultsSection = document.getElementById('resultsSection');
+      const loadingState = document.getElementById('loadingState');
+      const resultsContent = document.getElementById('resultsContent');
+      const noResultsState = document.getElementById('noResultsState');
+      const zipSummary = document.getElementById('zipSummary');
+
+      zipForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Get ZIP code
+        const zip = document.getElementById('zip').value;
+
+        // Validate ZIP code (simple 5-digit check)
+        if (!/^\d{5}$/.test(zip)) {
+          alert('Please enter a valid 5-digit ZIP code.');
+          return;
+        }
+
+        // Show loading state
+        resultsSection.classList.remove('hidden');
+        loadingState.classList.remove('hidden');
+        resultsContent.classList.add('hidden');
+        noResultsState.classList.add('hidden');
+
+        // Simulate API call with timeout
+        setTimeout(function () {
+          // Hide loading state
+          loadingState.classList.add('hidden');
+
+          // Update ZIP summary
+          let locationInfo = "Downtown Houston, Harris County, Texas";
+          if (zip !== "77002") {
+            // This would normally be determined by API lookup
+            if (zip.startsWith("770")) {
+              locationInfo = "Houston, Harris County, Texas";
+            } else if (zip.startsWith("77")) {
+              locationInfo = "Harris County, Texas";
+            } else if (zip.startsWith("7")) {
+              locationInfo = "Texas";
+            } else {
+              locationInfo = "Location not found";
+            }
+          }
+
+          zipSummary.innerHTML = `Based on ZIP code: <span class="font-medium">${zip}</span> (${locationInfo})`;
+
+          // Show results (for demo, always show results for valid ZIP codes)
+          if (zip.length === 5 && /^\d+$/.test(zip)) {
+            resultsContent.classList.remove('hidden');
+          } else {
+            noResultsState.classList.remove('hidden');
+          }
+
+          // Scroll to results
+          resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }, 1500);
+      });
+
+      // New search button
+      const newSearchBtn = document.getElementById('newSearch');
+      newSearchBtn.addEventListener('click', function () {
+        resultsSection.classList.add('hidden');
+        zipForm.reset();
+
+        // Scroll to form
+        zipForm.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Try again button
+      const tryAgainBtn = document.getElementById('tryAgainBtn');
+      tryAgainBtn.addEventListener('click', function () {
+        resultsSection.classList.add('hidden');
+        zipForm.reset();
+
+        // Scroll to form
+        zipForm.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Collapsible sections
+      const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+      collapsibleHeaders.forEach(header => {
+        header.addEventListener('click', function () {
+          const targetId = this.getAttribute('data-target');
+          const targetContent = document.getElementById(targetId);
+          const arrow = this.querySelector('.arrow-icon');
+
+          // Toggle content
+          targetContent.classList.toggle('open');
+
+          // Toggle arrow
+          arrow.classList.toggle('open');
+        });
+      });
+    });
+  </script>
+  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'9638b26466e92d3b',t:'MTc1MzI0NzY5My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>

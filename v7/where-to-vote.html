@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Where to Vote - Let's Go Vote</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;700;900&family=Poppins:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f7ff;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    .montserrat {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+
+    .visitor-counter {
+      display: inline-flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+    }
+
+    .counter-digit {
+      display: inline-block;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      line-height: 1.5rem;
+      text-align: center;
+      border-radius: 0.25rem;
+      margin: 0 0.125rem;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .delay-1 {
+      animation-delay: 0.3s;
+    }
+
+    .delay-2 {
+      animation-delay: 0.6s;
+    }
+
+    .delay-3 {
+      animation-delay: 0.9s;
+    }
+
+    /* Input focus effect */
+    .input-focus-effect {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .input-focus-effect:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+    }
+
+    /* Location card hover effect */
+    .location-card {
+      transition: all 0.3s ease;
+    }
+
+    .location-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Pulse animation */
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+
+    /* Map marker bounce */
+    .marker-bounce {
+      animation: markerBounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes markerBounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* Accordion */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .accordion-content.open {
+      max-height: 1000px;
+      transition: max-height 0.5s ease-in;
+    }
+
+    /* Rotate arrow */
+    .arrow-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .arrow-icon.open {
+      transform: rotate(180deg);
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 15px;
+      width: 2px;
+      height: 100%;
+      background-color: #e5e7eb;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 40px;
+      margin-bottom: 30px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 9px;
+      top: 5px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: #3b82f6;
+      z-index: 1;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-blue {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+
+    .badge-green {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-amber {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-red {
+      background-color: #fee2e2;
+      color: #b91c1c;
+    }
+
+    /* Tab styles */
+    .tab {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .tab.active {
+      color: #1e40af;
+      font-weight: 600;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #3b82f6;
+    }
+
+    /* Map styles */
+    .map-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.5rem;
+    }
+
+    .map-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .tooltip .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: #333 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Checkmark animation */
+    .checkmark {
+      display: inline-block;
+      transform-origin: center;
+      animation: checkmarkBounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes checkmarkBounce {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.2);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="./index.html">
+        <div class="text-2xl font-bold text-blue-800">
+          <span class="cursive">Let's Go</span> Vote
+        </div>
+      </a>
+      <div class="hidden md:flex space-x-6">
+        <a href="./candidates.html" class="font-medium hover:text-blue-600 transition">Know Your Candidates</a>
+        <a href="./register-to-vote.html" class="font-medium hover:text-blue-600 transition">Register to Vote</a>
+        <a href="./where-to-vote.html" class="font-medium hover:text-blue-600 transition">Where to Vote</a>
+        <!-- <a href="./events" class="font-medium hover:text-blue-600 transition">Events</a> -->
+        <a href="./understand-ballot.html" class="font-medium hover:text-blue-600 transition">Understand Ballot</a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button class="text-blue-800">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="bg-gradient-to-r from-blue-600 to-indigo-700 py-12 md:py-16">
+    <div class="container mx-auto px-4">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 montserrat tracking-tight">
+          Where to Vote
+        </h1>
+        <p class="text-xl text-indigo-100 max-w-3xl mx-auto">
+          Find your polling location, check wait times, and get all the information you need to cast your vote.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8 md:py-12">
+    <!-- Voting Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <!-- Card 1 -->
+      <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-indigo-500 fade-in">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800">Find Your Polling Place</h3>
+        </div>
+        <p class="text-gray-600">
+          Enter your address to find your assigned polling location. You can only vote at your designated polling place
+          on Election Day.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-purple-500 fade-in delay-1">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800">Early Voting Options</h3>
+        </div>
+        <p class="text-gray-600">
+          Many locations offer early voting before Election Day. Check if your area has early voting and find the
+          nearest location.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-blue-500 fade-in delay-2">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-800">Mail-In Voting</h3>
+        </div>
+        <p class="text-gray-600">
+          Learn if you're eligible to vote by mail in your state and how to request a mail-in ballot before the
+          deadline.
+        </p>
+      </div>
+    </div>
+
+    <!-- Address Input Section -->
+    <div class="max-w-xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8 mb-10">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Find Your Polling Location</h2>
+
+      <form id="addressForm" class="space-y-4">
+        <div>
+          <label for="zip" class="block text-sm font-medium text-gray-700 mb-1">Enter Your ZIP Code</label>
+          <input type="text" id="zip" name="zip"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg input-focus-effect focus:outline-none text-lg"
+            placeholder="77002" maxlength="5">
+          <p class="text-sm text-gray-500 mt-1">Example: 77002</p>
+        </div>
+
+        <div class="flex justify-center pt-4">
+          <button type="submit" id="findButton"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd" />
+            </svg>
+            Find Polling Locations
+          </button>
+        </div>
+
+        <div class="text-center text-sm text-gray-500 pt-2">
+          Your address is only used to find polling locations and is not stored.
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Section (Initially Hidden) -->
+    <div id="resultsSection" class="max-w-6xl mx-auto hidden">
+      <!-- Loading State -->
+      <div id="loadingState" class="text-center py-12">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 mb-4">
+        </div>
+        <p class="text-lg text-gray-600">Finding polling locations near you...</p>
+      </div>
+
+      <!-- Results Content -->
+      <div id="resultsContent" class="hidden">
+        <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 mb-8">
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">Your Voting Information</h2>
+          <p id="addressSummary" class="text-gray-600 mb-6">Based on address: <span class="font-medium">123 Main St,
+              Houston, TX 77002</span></p>
+
+          <!-- Election Info -->
+          <div class="mb-8 bg-indigo-50 border border-indigo-200 rounded-lg p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Upcoming Election Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="bg-white rounded-lg p-4 shadow-sm">
+                <h4 class="font-bold text-gray-700 mb-1">Election Date</h4>
+                <p class="text-indigo-600 text-lg font-medium">November 5, 2024</p>
+                <p class="text-gray-500 text-sm">General Election</p>
+              </div>
+              <div class="bg-white rounded-lg p-4 shadow-sm">
+                <h4 class="font-bold text-gray-700 mb-1">Polls Open</h4>
+                <p class="text-indigo-600 text-lg font-medium">7:00 AM - 7:00 PM</p>
+                <p class="text-gray-500 text-sm">Local time</p>
+              </div>
+              <div class="bg-white rounded-lg p-4 shadow-sm">
+                <h4 class="font-bold text-gray-700 mb-1">Voter ID Required</h4>
+                <p class="text-indigo-600 text-lg font-medium">Yes</p>
+                <p class="text-gray-500 text-sm">Photo ID required</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs for Different Voting Options -->
+          <div class="mb-6">
+            <div class="border-b border-gray-200">
+              <div class="flex space-x-8">
+                <button class="tab active py-2 px-1" data-tab="election-day">Election Day Voting</button>
+                <button class="tab py-2 px-1" data-tab="early-voting">Early Voting</button>
+                <button class="tab py-2 px-1" data-tab="mail-voting">Vote by Mail</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Content -->
+          <div class="tab-content">
+            <!-- Election Day Voting Tab -->
+            <div id="election-day" class="tab-pane">
+              <h3 class="text-xl font-bold text-gray-800 mb-4">Your Election Day Polling Location</h3>
+
+              <!-- Primary Location -->
+              <div class="bg-white border border-green-200 rounded-lg p-5 shadow-sm mb-6">
+                <div class="flex items-start">
+                  <div class="flex-shrink-0 mr-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center mb-1">
+                      <h4 class="text-lg font-bold text-gray-800">Downtown Houston Public Library</h4>
+                      <span class="badge badge-green ml-3">Assigned Location</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">Precinct #1234</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                      <div>
+                        <div class="space-y-2 text-gray-600">
+                          <p class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            500 McKinney St, Houston, TX 77002
+                          </p>
+                          <p class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Open 7:00 AM - 7:00 PM on Election Day
+                          </p>
+                          <p class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                              class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            (832) 393-1313
+                          </p>
+                        </div>
+                        <div class="mt-4 flex space-x-3">
+                          <a href="https://maps.google.com/?q=500+McKinney+St,+Houston,+TX+77002" target="_blank"
+                            class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                            </svg>
+                            Directions
+                          </a>
+                          <a href="#"
+                            class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                              stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            More Info
+                          </a>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="bg-gray-100 rounded-lg p-4">
+                          <h5 class="font-bold text-gray-700 mb-2">Current Wait Time</h5>
+                          <div class="flex items-center">
+                            <div class="w-2/3 bg-gray-200 rounded-full h-4">
+                              <div class="bg-green-500 h-4 rounded-full" style="width: 15%"></div>
+                            </div>
+                            <span class="ml-3 text-green-600 font-medium">5 min</span>
+                          </div>
+                          <p class="text-xs text-gray-500 mt-1">Last updated: 10 minutes ago</p>
+                        </div>
+                        <div class="mt-3">
+                          <h5 class="font-bold text-gray-700 mb-2">Accessibility</h5>
+                          <div class="flex flex-wrap gap-2">
+                            <span class="badge badge-blue">Wheelchair Access</span>
+                            <span class="badge badge-blue">Curbside Voting</span>
+                            <span class="badge badge-blue">ADA Compliant</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Map -->
+                    <div class="map-container h-64 bg-gray-200 rounded-lg overflow-hidden">
+                      <iframe width="100%" height="100%" frameborder="0" style="border:0"
+                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=500+McKinney+St,+Houston,+TX+77002"
+                        allowfullscreen></iframe>
+                      <div class="map-overlay"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Alternative Locations -->
+              <h3 class="text-xl font-bold text-gray-800 mb-4">Alternative Polling Locations Near You</h3>
+              <p class="text-gray-600 mb-4">On Election Day, you must vote at your assigned polling place. These
+                alternatives are provided for reference only.</p>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <!-- Alternative Location 1 -->
+                <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">Harris County Administration Building</h4>
+                  <p class="text-gray-500 mb-3">1.2 miles away</p>
+                  <div class="space-y-2 text-gray-600">
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      1001 Preston St, Houston, TX 77002
+                    </p>
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <span class="text-amber-600 font-medium">15 min</span>
+                        <span class="text-gray-500"> estimated wait</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex space-x-3">
+                    <a href="https://maps.google.com/?q=1001+Preston+St,+Houston,+TX+77002" target="_blank"
+                      class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      Directions
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Alternative Location 2 -->
+                <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">University of Houston - Downtown</h4>
+                  <p class="text-gray-500 mb-3">1.5 miles away</p>
+                  <div class="space-y-2 text-gray-600">
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      1 Main St, Houston, TX 77002
+                    </p>
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <span class="text-red-600 font-medium">30 min</span>
+                        <span class="text-gray-500"> estimated wait</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex space-x-3">
+                    <a href="https://maps.google.com/?q=1+Main+St,+Houston,+TX+77002" target="_blank"
+                      class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      Directions
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Alternative Location 3 -->
+                <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">YMCA Downtown</h4>
+                  <p class="text-gray-500 mb-3">1.8 miles away</p>
+                  <div class="space-y-2 text-gray-600">
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      1600 Louisiana St, Houston, TX 77002
+                    </p>
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <span class="text-green-600 font-medium">10 min</span>
+                        <span class="text-gray-500"> estimated wait</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex space-x-3">
+                    <a href="https://maps.google.com/?q=1600+Louisiana+St,+Houston,+TX+77002" target="_blank"
+                      class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      Directions
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Alternative Location 4 -->
+                <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">Houston Community College - Central</h4>
+                  <p class="text-gray-500 mb-3">2.1 miles away</p>
+                  <div class="space-y-2 text-gray-600">
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      1300 Holman St, Houston, TX 77004
+                    </p>
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <span class="text-amber-600 font-medium">20 min</span>
+                        <span class="text-gray-500"> estimated wait</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex space-x-3">
+                    <a href="https://maps.google.com/?q=1300+Holman+St,+Houston,+TX+77004" target="_blank"
+                      class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      Directions
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Early Voting Tab -->
+            <div id="early-voting" class="tab-pane hidden">
+              <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Early Voting Information</h3>
+                <p class="text-gray-600 mb-4">
+                  Early voting allows you to cast your ballot before Election Day. In Harris County, you can vote at any
+                  early voting location regardless of where you live in the county.
+                </p>
+                <div class="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 class="font-bold text-gray-700 mb-2">Early Voting Period</h4>
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <div class="timeline-dot"></div>
+                      <h5 class="font-bold text-gray-800">October 21 - November 1, 2024</h5>
+                      <p class="text-gray-600">Monday - Saturday: 7:00 AM - 7:00 PM</p>
+                      <p class="text-gray-600">Sunday: 12:00 PM - 6:00 PM</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <h3 class="text-xl font-bold text-gray-800 mb-4">Early Voting Locations Near You</h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <!-- Early Voting Location 1 -->
+                <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">Downtown Houston Public Library</h4>
+                  <p class="text-gray-500 mb-3">0.2 miles away</p>
+                  <div class="space-y-2 text-gray-600">
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      500 McKinney St, Houston, TX 77002
+                    </p>
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Early Voting Hours: 7:00 AM - 7:00 PM
+                    </p>
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <span class="text-green-600 font-medium">5 min</span>
+                        <span class="text-gray-500"> current wait time</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex space-x-3">
+                    <a href="https://maps.google.com/?q=500+McKinney+St,+Houston,+TX+77002" target="_blank"
+                      class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      Directions
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Early Voting Location 2 -->
+                <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">Harris County Administration Building</h4>
+                  <p class="text-gray-500 mb-3">1.2 miles away</p>
+                  <div class="space-y-2 text-gray-600">
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      1001 Preston St, Houston, TX 77002
+                    </p>
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Early Voting Hours: 7:00 AM - 7:00 PM
+                    </p>
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <span class="text-amber-600 font-medium">15 min</span>
+                        <span class="text-gray-500"> current wait time</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex space-x-3">
+                    <a href="https://maps.google.com/?q=1001+Preston+St,+Houston,+TX+77002" target="_blank"
+                      class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      Directions
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Early Voting Location 3 -->
+                <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">University of Houston - Downtown</h4>
+                  <p class="text-gray-500 mb-3">1.5 miles away</p>
+                  <div class="space-y-2 text-gray-600">
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      1 Main St, Houston, TX 77002
+                    </p>
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Early Voting Hours: 7:00 AM - 7:00 PM
+                    </p>
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <span class="text-red-600 font-medium">30 min</span>
+                        <span class="text-gray-500"> current wait time</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex space-x-3">
+                    <a href="https://maps.google.com/?q=1+Main+St,+Houston,+TX+77002" target="_blank"
+                      class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      Directions
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Early Voting Location 4 -->
+                <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                  <h4 class="text-lg font-bold text-gray-800 mb-1">YMCA Downtown</h4>
+                  <p class="text-gray-500 mb-3">1.8 miles away</p>
+                  <div class="space-y-2 text-gray-600">
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      1600 Louisiana St, Houston, TX 77002
+                    </p>
+                    <p class="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Early Voting Hours: 7:00 AM - 7:00 PM
+                    </p>
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <span class="text-green-600 font-medium">10 min</span>
+                        <span class="text-gray-500"> current wait time</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-4 flex space-x-3">
+                    <a href="https://maps.google.com/?q=1600+Louisiana+St,+Houston,+TX+77002" target="_blank"
+                      class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      Directions
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Early Voting Tips -->
+              <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Early Voting Tips</h3>
+                <ul class="space-y-3">
+                  <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                      viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-gray-700">Early voting typically has shorter wait times than Election Day.</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                      viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-gray-700">Weekday mornings and early afternoons usually have the shortest
+                      lines.</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                      viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-gray-700">Bring a valid photo ID and your voter registration card if you have
+                      it.</span>
+                  </li>
+                  <li class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                      viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <span class="text-gray-700">Check wait times online before heading to a location to avoid long
+                      lines.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Vote by Mail Tab -->
+            <div id="mail-voting" class="tab-pane hidden">
+              <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Vote by Mail Information</h3>
+                <p class="text-gray-600 mb-4">
+                  In Texas, you may be eligible to vote by mail if you are:
+                </p>
+                <ul class="list-disc list-inside space-y-1 text-gray-600 mb-4">
+                  <li>65 years of age or older</li>
+                  <li>Sick or disabled</li>
+                  <li>Expected to give birth within three weeks before or after Election Day</li>
+                  <li>Out of the county during early voting and on Election Day</li>
+                  <li>Confined in jail but otherwise eligible to vote</li>
+                </ul>
+                <div class="bg-white rounded-lg p-4 shadow-sm">
+                  <h4 class="font-bold text-gray-700 mb-2">Important Deadlines</h4>
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <div class="timeline-dot"></div>
+                      <h5 class="font-bold text-gray-800">October 25, 2024</h5>
+                      <p class="text-gray-600">Last day to apply for a mail-in ballot (received, not postmarked)</p>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-dot"></div>
+                      <h5 class="font-bold text-gray-800">November 5, 2024</h5>
+                      <p class="text-gray-600">Mail-in ballots must be postmarked by 7:00 PM</p>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-dot"></div>
+                      <h5 class="font-bold text-gray-800">November 6, 2024</h5>
+                      <p class="text-gray-600">Mail-in ballots must be received by 5:00 PM (if postmarked by Election
+                        Day)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mail Ballot Application -->
+              <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">How to Apply for a Mail-In Ballot</h3>
+                <ol class="space-y-4">
+                  <li class="flex">
+                    <div class="flex-shrink-0 mr-4">
+                      <div
+                        class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                        1
+                      </div>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-gray-700 mb-1">Download the Application</h4>
+                      <p class="text-gray-600 mb-2">
+                        Download and print the Application for Ballot by Mail (ABBM) from the Texas Secretary of State
+                        website.
+                      </p>
+                      <a href="https://www.sos.texas.gov/elections/voter/reqabbm.shtml" target="_blank"
+                        class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg transition duration-300 text-sm">
+                        Download Application
+                      </a>
+                    </div>
+                  </li>
+                  <li class="flex">
+                    <div class="flex-shrink-0 mr-4">
+                      <div
+                        class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                        2
+                      </div>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-gray-700 mb-1">Complete the Application</h4>
+                      <p class="text-gray-600">
+                        Fill out all required fields, including your name, address, and the reason you're eligible to
+                        vote by mail. Be sure to sign and date the application.
+                      </p>
+                    </div>
+                  </li>
+                  <li class="flex">
+                    <div class="flex-shrink-0 mr-4">
+                      <div
+                        class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                        3
+                      </div>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-gray-700 mb-1">Submit Your Application</h4>
+                      <p class="text-gray-600">
+                        Mail your completed application to your county's Early Voting Clerk. For Harris County, mail to:
+                      </p>
+                      <div class="bg-gray-100 p-3 rounded-lg mt-2 text-gray-700">
+                        <p>Harris County Elections Administrator</p>
+                        <p>P.O. Box 1148</p>
+                        <p>Houston, TX 77251-1148</p>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="flex">
+                    <div class="flex-shrink-0 mr-4">
+                      <div
+                        class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                        4
+                      </div>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-gray-700 mb-1">Receive and Return Your Ballot</h4>
+                      <p class="text-gray-600">
+                        Once your application is approved, you'll receive your ballot by mail. Complete it and return it
+                        by mail or in person to your county's Early Voting Clerk before the deadline.
+                      </p>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+
+              <!-- Mail Ballot Drop-off Locations -->
+              <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Mail Ballot Drop-off Locations</h3>
+                <p class="text-gray-600 mb-4">
+                  In Harris County, you can drop off your completed mail-in ballot in person at these designated
+                  locations during early voting and on Election Day:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Drop-off Location 1 -->
+                  <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                    <h4 class="text-lg font-bold text-gray-800 mb-1">Harris County Election Headquarters</h4>
+                    <div class="space-y-2 text-gray-600">
+                      <p class="flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        1001 Preston St, Houston, TX 77002
+                      </p>
+                      <p class="flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Hours: 8:00 AM - 4:30 PM (Mon-Fri)
+                      </p>
+                    </div>
+                    <div class="mt-4 flex space-x-3">
+                      <a href="https://maps.google.com/?q=1001+Preston+St,+Houston,+TX+77002" target="_blank"
+                        class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                        </svg>
+                        Directions
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Drop-off Location 2 -->
+                  <div class="location-card bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+                    <h4 class="text-lg font-bold text-gray-800 mb-1">Harris County Clerk's Office - Downtown</h4>
+                    <div class="space-y-2 text-gray-600">
+                      <p class="flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        201 Caroline St, Houston, TX 77002
+                      </p>
+                      <p class="flex items-start">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400 flex-shrink-0 mt-0.5"
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Hours: 8:00 AM - 4:30 PM (Mon-Fri)
+                      </p>
+                    </div>
+                    <div class="mt-4 flex space-x-3">
+                      <a href="https://maps.google.com/?q=201+Caroline+St,+Houston,+TX+77002" target="_blank"
+                        class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                        </svg>
+                        Directions
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div class="flex items-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2 mt-0.5 flex-shrink-0"
+                      viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                    </svg>
+                    <div>
+                      <h4 class="font-bold text-gray-800 mb-1">Important Note</h4>
+                      <p class="text-gray-700">
+                        When dropping off your mail-in ballot in person, you must show a valid photo ID and sign a
+                        roster. You may only drop off your own ballot, not someone else's.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Track Your Ballot -->
+              <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Track Your Mail-In Ballot</h3>
+                <p class="text-gray-600 mb-4">
+                  You can track the status of your mail-in ballot application and ballot through the Harris County
+                  Ballot Tracker or the Texas Secretary of State's website.
+                </p>
+                <div class="flex flex-col md:flex-row gap-4">
+                  <a href="https://www.harrisvotes.com/Tracking" target="_blank"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-center">
+                    Harris County Ballot Tracker
+                  </a>
+                  <a href="https://webservices.sos.state.tx.us/FPCA/index.aspx" target="_blank"
+                    class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 text-center">
+                    Texas SOS Ballot Tracker
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Button - New Search -->
+          <div class="flex justify-center mt-8">
+            <button id="newSearch"
+              class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                  clip-rule="evenodd" />
+              </svg>
+              New Search
+            </button>
+          </div>
+        </div>
+
+        <!-- No Results State -->
+        <div id="noResultsState" class="hidden text-center py-12 bg-white rounded-xl shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">No Polling Locations Found</h3>
+          <p class="text-gray-600 mb-6">We couldn't find polling locations for the address you entered. Please check
+            your address and try again.</p>
+          <button id="tryAgainBtn"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+            Try Again
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- What to Bring Section -->
+    <div class="max-w-4xl mx-auto mt-16">
+      <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">What to Bring to the Polls</h2>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Acceptable IDs -->
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500 mr-2" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Acceptable Forms of ID
+            </h3>
+            <p class="text-gray-600 mb-4">
+              In Texas, you must present one of these acceptable forms of photo ID:
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Texas Driver License issued by the Texas Department of Public Safety
+                  (DPS)</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Texas Election Identification Certificate issued by DPS</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Texas Personal Identification Card issued by DPS</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Texas Handgun License issued by DPS</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">United States Military Identification Card containing the person's
+                  photograph</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">United States Citizenship Certificate containing the person's
+                  photograph</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">United States Passport (book or card)</span>
+              </li>
+            </ul>
+            <p class="text-sm text-gray-500 mt-4">
+              ID may be expired up to 4 years. For voters aged 70 or older, the ID may be expired for any length of
+              time.
+            </p>
+          </div>
+
+          <!-- If You Don't Have ID -->
+          <div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-500 mr-2" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              If You Don't Have an Acceptable ID
+            </h3>
+            <p class="text-gray-600 mb-4">
+              If you don't have an acceptable photo ID, you can still vote by signing a declaration and providing a
+              supporting form of ID, such as:
+            </p>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Voter registration certificate</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Certified birth certificate</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Current utility bill</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Bank statement</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Government check</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Paycheck</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0"
+                  viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="text-gray-700">Other government document with your name and address</span>
+              </li>
+            </ul>
+            <div class="mt-4 bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <p class="text-gray-700 text-sm">
+                You'll need to sign a Reasonable Impediment Declaration stating why you couldn't obtain an acceptable
+                photo ID. Valid reasons include work schedule, lack of transportation, disability, family
+                responsibilities, lost or stolen ID, or pending application for ID.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Items -->
+        <div class="mt-8">
+          <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-500 mr-2" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            Additional Items to Consider Bringing
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-indigo-50 rounded-lg p-4">
+              <h4 class="font-bold text-gray-800 mb-2">Voter Information</h4>
+              <ul class="space-y-1 text-gray-700">
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 flex-shrink-0"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Voter registration card
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 flex-shrink-0"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Sample ballot or notes
+                </li>
+              </ul>
+            </div>
+            <div class="bg-indigo-50 rounded-lg p-4">
+              <h4 class="font-bold text-gray-800 mb-2">Comfort Items</h4>
+              <ul class="space-y-1 text-gray-700">
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 flex-shrink-0"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Water bottle
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 flex-shrink-0"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Snack (if long wait expected)
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 flex-shrink-0"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Chair (if standing is difficult)
+                </li>
+              </ul>
+            </div>
+            <div class="bg-indigo-50 rounded-lg p-4">
+              <h4 class="font-bold text-gray-800 mb-2">COVID-19 Precautions</h4>
+              <ul class="space-y-1 text-gray-700">
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 flex-shrink-0"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Face mask
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 flex-shrink-0"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Hand sanitizer
+                </li>
+                <li class="flex items-start">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2 flex-shrink-0"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  Your own pen
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between">
+        <div class="mb-6 md:mb-0">
+          <h3 class="text-xl font-bold mb-4">
+            <span class="cursive">Let's Go</span> Vote
+          </h3>
+          <p class="text-gray-400">Empowering citizens through voter education.</p>
+
+          <!-- Visitor Counter -->
+          <div class="mt-4">
+            <div class="visitor-counter">
+              <span class="mr-2">Visitors:</span>
+              <span id="visitorCount" class="flex">
+                <span class="counter-digit">2</span>
+                <span class="counter-digit">1</span>
+                <span class="counter-digit">4</span>
+                <span class="counter-digit">0</span>
+                <span class="counter-digit">1</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-bold mb-4">Resources</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white">Understand Ballot</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Events</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Know Your Candidate</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">Connect</h4>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z" />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+        <p>&copy; 2025 Let's Go Vote. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'963cfae99238e7aa',t:'MTc1MzI5MjYwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
