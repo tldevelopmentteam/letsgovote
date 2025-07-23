@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Understand Your Ballot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;700;900&family=Poppins:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f7ff;
+    }
+
+    .cursive {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .visitor-counter {
+      display: inline-flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+    }
+
+    .counter-digit {
+      display: inline-block;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      width: 1.5rem;
+      height: 1.5rem;
+      line-height: 1.5rem;
+      text-align: center;
+      border-radius: 0.25rem;
+      margin: 0 0.125rem;
+      font-family: monospace;
+      font-weight: bold;
+    }
+
+    /* Pulsing dot animation */
+    .pulse-dot {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: rgba(59, 130, 246, 0.8);
+      cursor: pointer;
+      z-index: 20;
+      box-shadow: 0 0 0 rgba(59, 130, 246, 0.4);
+      animation: pulse 2s infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pulse-dot::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: white;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+      }
+    }
+
+    /* Tooltip styles */
+    .tooltip-container {
+      position: absolute;
+      z-index: 30;
+      width: 300px;
+      max-width: 90vw;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .tooltip-container.visible {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .tooltip-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+    }
+
+    .tooltip-arrow-up {
+      bottom: 100%;
+      left: 50%;
+      margin-left: -8px;
+      border-width: 0 8px 8px 8px;
+      border-color: transparent transparent white transparent;
+    }
+
+    .tooltip-arrow-down {
+      top: 100%;
+      left: 50%;
+      margin-left: -8px;
+      border-width: 8px 8px 0 8px;
+      border-color: white transparent transparent transparent;
+    }
+
+    .tooltip-arrow-left {
+      right: 100%;
+      top: 50%;
+      margin-top: -8px;
+      border-width: 8px 8px 8px 0;
+      border-color: transparent white transparent transparent;
+    }
+
+    .tooltip-arrow-right {
+      left: 100%;
+      top: 50%;
+      margin-top: -8px;
+      border-width: 8px 0 8px 8px;
+      border-color: transparent transparent transparent white;
+    }
+
+    /* PDF container */
+    #pdf-container {
+      position: relative;
+      width: 100%;
+      height: 80vh;
+      overflow: hidden;
+      background-color: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    #pdf-render {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+
+    /* PDF controls */
+    .pdf-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 30px;
+      padding: 8px 16px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 40;
+    }
+
+    /* Modal styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .modal.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: white;
+      border-radius: 12px;
+      max-width: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+
+    .modal.visible .modal-content {
+      transform: scale(1);
+    }
+
+    /* Loading spinner */
+    .loading-spinner {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 4px solid #3b82f6;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Zoom controls */
+    .zoom-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      padding: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 40;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 640px) {
+      .tooltip-container {
+        width: 250px;
+      }
+
+      .pdf-controls {
+        bottom: 10px;
+        padding: 6px 12px;
+      }
+
+      .zoom-controls {
+        top: 10px;
+        right: 10px;
+        padding: 6px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <a href="./index.html">
+        <div class="text-2xl font-bold text-blue-800">
+          <span class="">Let's Go</span> Vote
+        </div>
+      </a>
+      <div class="hidden md:flex space-x-6">
+        <a href="./candidates.html" class="font-medium hover:text-blue-600 transition">Know Your Candidates</a>
+        <a href="./register-to-vote.html" class="font-medium hover:text-blue-600 transition">Register to Vote</a>
+        <a href="./where-to-vote.html" class="font-medium hover:text-blue-600 transition">Where to Vote</a>
+        <!-- <a href="./events" class="font-medium hover:text-blue-600 transition">Events</a> -->
+        <a href="./understand-ballot.html" class="font-medium hover:text-blue-600 transition">Understand Ballot</a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden">
+        <button class="text-blue-800">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="bg-black text-white relative overflow-hidden">
+    <div class="container mx-auto px-4 my-16">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+          Understand Your Ballot
+        </h1>
+        <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+          Learn about the layout of your ballot and what each section means before you vote.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+      <div class="flex flex-col md:flex-row items-start gap-6 mb-6">
+        <div class="md:w-2/3">
+          <h2 class="text-2xl font-bold text-gray-800 mb-3">Sample Ballot Guide</h2>
+          <p class="text-gray-600 mb-4">
+            This interactive guide helps you understand your ballot before Election Day. Click on the highlighted areas
+            to learn more about each section of the ballot.
+          </p>
+          <div class="flex flex-wrap gap-4 mb-4">
+            <div class="flex items-center">
+              <div class="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+              <span class="text-sm text-gray-700">Click blue dots for more information</span>
+            </div>
+            <div class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clip-rule="evenodd" />
+              </svg>
+              <span class="text-sm text-gray-700">Important information highlighted</span>
+            </div>
+          </div>
+        </div>
+        <div class="md:w-1/3 bg-blue-50 p-4 rounded-lg">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Your Ballot Details</h3>
+          <div class="space-y-2">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Election:</span>
+              <span class="font-medium">General Election 2024</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">County:</span>
+              <span class="font-medium">Harris County</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Precinct:</span>
+              <span class="font-medium">Precinct 142</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Ballot Style:</span>
+              <span class="font-medium">Style 23</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF Viewer -->
+      <div id="pdf-container" class="border border-gray-200 rounded-lg">
+        <div id="pdf-loading" class="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
+          <div class="text-center">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-gray-600">Loading ballot...</p>
+          </div>
+        </div>
+        <div id="pdf-render"></div>
+
+        <!-- Interactive hotspots will be added here dynamically -->
+
+        <!-- PDF Controls -->
+        <div class="pdf-controls">
+          <button id="prev-page"
+            class="p-2 text-gray-700 hover:text-blue-600 disabled:text-gray-400 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div class="flex items-center px-4">
+            <span id="current-page" class="font-medium">1</span>
+            <span class="mx-1">/</span>
+            <span id="total-pages" class="text-gray-600">1</span>
+          </div>
+          <button id="next-page"
+            class="p-2 text-gray-700 hover:text-blue-600 disabled:text-gray-400 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Zoom Controls -->
+        <div class="zoom-controls">
+          <button id="zoom-out" class="p-1 text-gray-700 hover:text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <span id="zoom-level" class="px-2 text-sm font-medium">100%</span>
+          <button id="zoom-in" class="p-1 text-gray-700 hover:text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">Ballot Instructions</h3>
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-yellow-700">
+                This is a sample ballot for educational purposes only. Your actual ballot may look different depending
+                on your voting location and eligible races. Always check your official sample ballot from your local
+                election office.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ballot FAQ Section -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Frequently Asked Questions</h2>
+
+      <div class="space-y-4">
+        <div class="border border-gray-200 rounded-lg">
+          <button class="faq-toggle w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-800">What if I make a mistake on my ballot?</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 faq-icon" viewBox="0 0 20 20"
+              fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="faq-content hidden px-6 pb-4">
+            <p class="text-gray-600">
+              If you make a mistake on your ballot, do not try to correct it yourself. Instead, return the spoiled
+              ballot to an election worker and request a new one. You can receive up to three ballots total (the first
+              one and two replacements). The spoiled ballot will be voided and will not be counted.
+            </p>
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg">
+          <button class="faq-toggle w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-800">What if I don't want to vote in every race?</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 faq-icon" viewBox="0 0 20 20"
+              fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="faq-content hidden px-6 pb-4">
+            <p class="text-gray-600">
+              You are not required to vote in every race on your ballot. This is called an "undervote" and is perfectly
+              legal. Your ballot will still be counted for all races where you did make a selection. However, if you
+              select more candidates than allowed in a race (an "overvote"), that particular race will not be counted.
+            </p>
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg">
+          <button class="faq-toggle w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-800">What are ballot measures and propositions?</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 faq-icon" viewBox="0 0 20 20"
+              fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="faq-content hidden px-6 pb-4">
+            <p class="text-gray-600">
+              Ballot measures and propositions are questions submitted to voters for approval or rejection. These can
+              include constitutional amendments, bond measures, tax initiatives, or other policy questions. Voting "Yes"
+              or "For" means you support the measure, while voting "No" or "Against" means you oppose it. The ballot
+              will include a summary of each measure, but it's recommended to research these items before Election Day.
+            </p>
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg">
+          <button class="faq-toggle w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-800">What does "Vote for no more than X" mean?</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 faq-icon" viewBox="0 0 20 20"
+              fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="faq-content hidden px-6 pb-4">
+            <p class="text-gray-600">
+              When you see "Vote for no more than X" (where X is a number), it means you can vote for up to that many
+              candidates in that particular race, but not more. For example, in a school board race that says "Vote for
+              no more than 3," you can vote for 1, 2, or 3 candidates. If you vote for more than the specified number,
+              your votes for that race will not be counted (overvote).
+            </p>
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-lg">
+          <button class="faq-toggle w-full text-left px-6 py-4 focus:outline-none flex justify-between items-center">
+            <h3 class="text-lg font-medium text-gray-800">What is a straight-party voting option?</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 faq-icon" viewBox="0 0 20 20"
+              fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+          <div class="faq-content hidden px-6 pb-4">
+            <p class="text-gray-600">
+              In some states, ballots offer a straight-party voting option that allows you to vote for all candidates of
+              one political party with a single selection. If you choose this option, all partisan races will be
+              automatically filled with that party's candidates. However, you can still vote for individual candidates
+              from other parties in specific races, which will override your straight-party selection for those races
+              only. Non-partisan races and ballot measures still require individual selections.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tooltip Templates (Hidden) -->
+  <div id="tooltip-templates" class="hidden">
+    <!-- Header Section Tooltip -->
+    <div id="header-tooltip" class="tooltip-content">
+      <h4 class="font-bold text-gray-800 mb-2">Ballot Header</h4>
+      <p class="text-gray-600 mb-3">
+        The header contains important information about the election, including:
+      </p>
+      <ul class="space-y-1 text-sm text-gray-600 mb-3">
+        <li>• Election type and date</li>
+        <li>• Your voting precinct and district</li>
+        <li>• Ballot style number</li>
+        <li>• Instructions for marking your ballot</li>
+      </ul>
+      <p class="text-gray-600 text-sm">
+        Always verify this information matches your registration details.
+      </p>
+    </div>
+
+    <!-- Federal Races Tooltip -->
+    <div id="federal-tooltip" class="tooltip-content">
+      <h4 class="font-bold text-gray-800 mb-2">Federal Offices</h4>
+      <p class="text-gray-600 mb-3">
+        This section includes races for federal positions such as:
+      </p>
+      <ul class="space-y-1 text-sm text-gray-600 mb-3">
+        <li>• President and Vice President</li>
+        <li>• U.S. Senate</li>
+        <li>• U.S. House of Representatives</li>
+      </ul>
+      <p class="text-gray-600 text-sm">
+        Federal officials make decisions on national policies, laws, and budgets.
+      </p>
+    </div>
+
+    <!-- State Races Tooltip -->
+    <div id="state-tooltip" class="tooltip-content">
+      <h4 class="font-bold text-gray-800 mb-2">State Offices</h4>
+      <p class="text-gray-600 mb-3">
+        This section includes races for state-level positions such as:
+      </p>
+      <ul class="space-y-1 text-sm text-gray-600 mb-3">
+        <li>• Governor</li>
+        <li>• Lieutenant Governor</li>
+        <li>• Attorney General</li>
+        <li>• State Senators and Representatives</li>
+      </ul>
+      <p class="text-gray-600 text-sm">
+        State officials make decisions on state laws, budgets, and policies.
+      </p>
+    </div>
+
+    <!-- Local Races Tooltip -->
+    <div id="local-tooltip" class="tooltip-content">
+      <h4 class="font-bold text-gray-800 mb-2">Local Offices</h4>
+      <p class="text-gray-600 mb-3">
+        This section includes races for local positions such as:
+      </p>
+      <ul class="space-y-1 text-sm text-gray-600 mb-3">
+        <li>• Mayor</li>
+        <li>• City Council</li>
+        <li>• County Commissioners</li>
+        <li>• School Board</li>
+        <li>• Judges</li>
+      </ul>
+      <p class="text-gray-600 text-sm">
+        Local officials make decisions that directly impact your community.
+      </p>
+    </div>
+
+    <!-- Ballot Measures Tooltip -->
+    <div id="measures-tooltip" class="tooltip-content">
+      <h4 class="font-bold text-gray-800 mb-2">Ballot Measures</h4>
+      <p class="text-gray-600 mb-3">
+        This section includes propositions, referendums, and initiatives that require voter approval.
+      </p>
+      <ul class="space-y-1 text-sm text-gray-600 mb-3">
+        <li>• Constitutional amendments</li>
+        <li>• Bond measures</li>
+        <li>• Tax initiatives</li>
+        <li>• Local ordinances</li>
+      </ul>
+      <p class="text-gray-600 text-sm">
+        Vote "Yes/For" to approve or "No/Against" to reject these measures.
+      </p>
+    </div>
+
+    <!-- Voting Instructions Tooltip -->
+    <div id="instructions-tooltip" class="tooltip-content">
+      <h4 class="font-bold text-gray-800 mb-2">Voting Instructions</h4>
+      <p class="text-gray-600 mb-3">
+        Follow these instructions carefully to ensure your vote is counted:
+      </p>
+      <ul class="space-y-1 text-sm text-gray-600 mb-3">
+        <li>• Fill in the oval/box completely</li>
+        <li>• Use black or blue ink only</li>
+        <li>• Do not make stray marks</li>
+        <li>• Do not cross out or erase</li>
+        <li>• Vote for the specified number of candidates</li>
+      </ul>
+      <p class="text-gray-600 text-sm">
+        If you make a mistake, ask for a new ballot.
+      </p>
+    </div>
+  </div>
+
+  <!-- Modal (Hidden by default) -->
+  <div id="info-modal" class="modal">
+    <div class="modal-content w-full max-w-2xl p-6">
+      <div class="flex justify-between items-start mb-4">
+        <h3 id="modal-title" class="text-xl font-bold text-gray-800"></h3>
+        <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="modal-content" class="text-gray-600"></div>
+      <div class="mt-6 flex justify-end">
+        <button id="modal-close-btn"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between">
+        <div class="mb-6 md:mb-0">
+          <h3 class="text-xl font-bold mb-4">
+            <span class="">Let's Go</span> Vote
+          </h3>
+          <p class="text-gray-400">Empowering citizens through voter education.</p>
+
+          <!-- Visitor Counter -->
+          <div class="mt-4">
+            <div class="visitor-counter">
+              <span class="mr-2">Visitors:</span>
+              <span id="visitorCount" class="flex">
+                <span class="counter-digit">2</span>
+                <span class="counter-digit">1</span>
+                <span class="counter-digit">4</span>
+                <span class="counter-digit">0</span>
+                <span class="counter-digit">1</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-bold mb-4">Resources</h4>
+            <ul class="space-y-2">
+              <li><a href="#" class="text-gray-400 hover:text-white">Understand Ballot</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Events</a></li>
+              <li><a href="#" class="text-gray-400 hover:text-white">Know Your Candidate</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-bold mb-4">Connect</h4>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z" />
+                </svg>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400">
+        <p>&copy; 2025 Let's Go Vote. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // PDF.js initialization
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Sample PDF URL (replace with your actual PDF URL)
+      const pdfUrl = 'data:application/pdf;base64,JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PCAvVHlwZSAvUGFnZSAvUGFyZW50IDEgMCBSIC9MYXN0TW9kaWZpZWQgKEQ6MjAyMzA1MTUxMjMwMDBaKSAvUmVzb3VyY2VzIDIgMCBSIC9NZWRpYUJveCBbMC4wMDAwMDAgMC4wMDAwMDAgNTk1LjI3NjAwMCA4NDEuODkwMDAwXSAvQ3JvcEJveCBbMC4wMDAwMDAgMC4wMDAwMDAgNTk1LjI3NjAwMCA4NDEuODkwMDAwXSAvQmxlZWRCb3ggWzAuMDAwMDAwIDAuMDAwMDAwIDU5NS4yNzYwMDAgODQxLjg5MDAwMF0gL1RyaW1Cb3ggWzAuMDAwMDAwIDAuMDAwMDAwIDU5NS4yNzYwMDAgODQxLjg5MDAwMF0gL0FydEJveCBbMC4wMDAwMDAgMC4wMDAwMDAgNTk1LjI3NjAwMCA4NDEuODkwMDAwXSAvQ29udGVudHMgNiAwIFIgL1JvdGF0ZSAwIC9Hcm91cCA8PCAvVHlwZSAvR3JvdXAgL1MgL1RyYW5zcGFyZW5jeSAvQ1MgL0RldmljZVJHQiA+PiAvQW5ub3RzIFsgNCAwIFIgXSAvUFogMSA+PgplbmRvYmoKNiAwIG9iago8PC9GaWx0ZXIgL0ZsYXRlRGVjb2RlIC9MZW5ndGggMjI0Pj4gc3RyZWFtCnicpZHBCsIwDIbvfYo5TkHWNE3TwpuCJ0E8eJO9gDhx4EFw+PYmm3Nz0+FpSfL9+ZOGrAGSR2iRgUCHDgMeUGJEywYdOYxk0JNBIoOeHQYyGNlhJINJHCYyWMRhJoNVHBYyKOKwksFmDhsZbO6wk8HuDgcZHO5wksHpDhcZXO5wk8HtDg8ZPO7wksHrDh8ZfPGHXwbfP/xjMJDBSAYTGcxksJDBSgYbGezicJDBKQ4XGdzi8JDBI45OBrU4GhlkcWjJIIpDTQZBHEoyWMWhIoNZHAoymMTRk0EvjoYMojgaMvDiaEjmD+KoZODEUcjAiqOQgRFHJgMtjkwGShyJDKQ4/gDDyZkNCmVuZHN0cmVhbQplbmRvYmoKMSAwIG9iago8PCAvVHlwZSAvUGFnZXMgL0tpZHMgWyA1IDAgUiBdIC9Db3VudCAxID4+CmVuZG9iagozIDAgb2JqCjw8L1R5cGUgL0NhdGFsb2cgL1BhZ2VzIDEgMCBSIC9NZXRhZGF0YSA3IDAgUj4+CmVuZG9iago3IDAgb2JqCjw8L1R5cGUgL01ldGFkYXRhIC9TdWJ0eXBlIC9YTUwgL0xlbmd0aCAxNjI0Pj4gc3RyZWFtCjw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+Cjx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNC1jMDA2IDgwLjE1OTgyNSwgMjAxNi8wOS8xNi0wMzozMTo1OCAgICAgICAgIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6cGRmPSJodHRwOi8vbnMuYWRvYmUuY29tL3BkZi8xLjMvIgogICAgICAgICAgICB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iCiAgICAgICAgICAgIHhtbG5zOnhtcD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyI+CiAgICAgICAgIDxwZGY6UHJvZHVjZXI+QWNyb2JhdCBEaXN0aWxsZXIgMTUuMCAoV2luZG93cyk7IG1vZGlmaWVkIHVzaW5nIGlUZXh0IDIuMS43IGJ5IDFUM1hUPC9wZGY6UHJvZHVjZXI+CiAgICAgICAgIDxkYzpmb3JtYXQ+YXBwbGljYXRpb24vcGRmPC9kYzpmb3JtYXQ+CiAgICAgICAgIDxkYzpjcmVhdG9yPgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaT5VbmtOb3duPC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC9kYzpjcmVhdG9yPgogICAgICAgICA8eG1wOkNyZWF0ZURhdGU+MjAyMy0wNS0xNVQxMjozMDowMFo8L3htcDpDcmVhdGVEYXRlPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAyMy0wNS0xNVQxMjozMDowMFo8L3htcDpNb2RpZnlEYXRlPgogICAgICAgICA8eG1wOk1ldGFkYXRhRGF0ZT4yMDIzLTA1LTE1VDEyOjMwOjAwWjwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgPC9yZGY6RGVzY3JpcHRpb24+CiAgIDwvcmRmOlJERj4KPC94OnhtcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCjw/eHBhY2tldCBlbmQ9InciPz4KZW5kc3RyZWFtCmVuZG9iago0IDAgb2JqCjw8L1N1YnR5cGUgL0xpbmsgL1JlY3QgWzIuODM1MDAwIDEuMDAwMDAwIDE5Ljg5NTAwMCAxMi4wMDUwMDBdIC9CUyA8PC9XIDAgL1R5cGUgL0JvcmRlcj4+IC9GIDQgL0EgPDwvVHlwZSAvQWN0aW9uIC9TIC9VUkkgL1VSSSAoaHR0cDovL3d3dy5hZG9iZS5jb20vZ28vZGlzdGlsbGVyX3RyYWRlbWFya19pbmZvKT4+IC9TdHJ1Y3RQYXJlbnQgMTAwMDAwPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9NZWRpYUJveCBbMCAwIDU5NSA4NDJdIC9Db3VudCAxIC9LaWRzIFsgNSAwIFIgXSA+PgplbmRvYmoKOCAwIG9iago8PCAvVHlwZSAvWFJlZiAvTGVuZ3RoIDYwIC9GaWx0ZXIgL0ZsYXRlRGVjb2RlIC9EZWNvZGVQYXJtcyA8PCAvQ29sdW1ucyA0IC9QcmVkaWN0b3IgMTIgPj4gL1cgWzEgMiAxXSAvSW5kZXggWzAgOV0gL0luZm8gOSAwIFIgL1Jvb3QgMyAwIFIgL1NpemUgOSAvUHJldiA1NzQgL0lEIFs8MWVkZDI0MzJjYTNmZTRiODQ1ZGNmNjdlYTdiMDFkOWE+PDFlZGQyNDMyY2EzZmU0Yjg0NWRjZjY3ZWE3YjAxZDlhPl0gPj4Kc3RyZWFtCngY2dgYmIE4CYjt/zMwXGBgYGRkBDKZgJiZCV0EIMAA8XMB8QplbmRzdHJlYW0KZW5kb2JqCjkgMCBvYmoKPDwgL1Byb2R1Y2VyIChpVGV4dK4gMi4xLjcgXChjXCkgMVQzWFQgTHRkLikgL0NyZWF0aW9uRGF0ZSAoRDoyMDIzMDUxNTEyMzAwMFopIC9Nb2REYXRlIChEOjIwMjMwNTE1MTIzMDAwWikgPj4KZW5kb2JqCnhyZWYKMCA5CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDQzOSAwMDAwMCBuIAowMDAwMDAyNDI5IDAwMDAwIG4gCjAwMDAwMDA0OTggMDAwMDAgbiAKMDAwMDAwMjI0NCAwMDAwMCBuIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDAxMzEgMDAwMDAgbiAKMDAwMDAwMDU2MiAwMDAwMCBuIAowMDAwMDAyNTEzIDAwMDAwIG4gCjAwMDAwMDI3NTEgMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA5IC9Sb290IDMgMCBSIC9JbmZvIDkgMCBSIC9JRCBbIDwxZWRkMjQzMmNhM2ZlNGI4NDVkY2Y2N2VhN2IwMWQ5YT4gPDFlZGQyNDMyY2EzZmU0Yjg0NWRjZjY3ZWE3YjAxZDlhPiBdID4+CnN0YXJ0eHJlZgoyODgzCiUlRU9GCg==';
+
+      // PDF.js variables
+      let pdfDoc = null;
+      let pageNum = 1;
+      let pageRendering = false;
+      let pageNumPending = null;
+      let scale = 1.0;
+      let canvas = null;
+      let ctx = null;
+
+      // Hotspot data - this would typically come from your backend
+      // Format: [page, x, y, width, height, tooltipId]
+      const hotspots = [
+        [1, 0.1, 0.1, 0.8, 0.1, 'header-tooltip'],     // Header section
+        [1, 0.1, 0.25, 0.8, 0.15, 'federal-tooltip'],  // Federal races
+        [1, 0.1, 0.45, 0.8, 0.15, 'state-tooltip'],    // State races
+        [1, 0.1, 0.65, 0.8, 0.15, 'local-tooltip'],    // Local races
+        [1, 0.1, 0.85, 0.8, 0.1, 'measures-tooltip'],  // Ballot measures
+        [1, 0.85, 0.05, 0.1, 0.1, 'instructions-tooltip'] // Instructions
+      ];
+
+      // Initialize PDF viewer
+      function initPDF() {
+        // Create canvas for PDF rendering
+        canvas = document.createElement('canvas');
+        canvas.className = 'pdf-canvas';
+        document.getElementById('pdf-render').appendChild(canvas);
+        ctx = canvas.getContext('2d');
+
+        // Load the PDF
+        pdfjsLib.getDocument(pdfUrl).promise.then(function (pdf) {
+          pdfDoc = pdf;
+          document.getElementById('total-pages').textContent = pdf.numPages;
+
+          // Hide loading indicator
+          document.getElementById('pdf-loading').style.display = 'none';
+
+          // Render the first page
+          renderPage(pageNum);
+        }).catch(function (error) {
+          console.error('Error loading PDF:', error);
+          document.getElementById('pdf-loading').innerHTML = `
+                        <div class="text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-red-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <p class="text-red-600 font-medium">Failed to load ballot PDF.</p>
+                            <button class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition" onclick="location.reload()">
+                                Try Again
+                            </button>
+                        </div>
+                    `;
+        });
+      }
+
+      // Render a specific page
+      function renderPage(num) {
+        pageRendering = true;
+
+        // Update page counter
+        document.getElementById('current-page').textContent = num;
+
+        // Remove existing hotspots
+        document.querySelectorAll('.pulse-dot').forEach(dot => dot.remove());
+        document.querySelectorAll('.tooltip-container').forEach(tooltip => tooltip.remove());
+
+        // Get the page
+        pdfDoc.getPage(num).then(function (page) {
+          // Adjust scale based on viewport
+          const viewport = page.getViewport({ scale: scale });
+          const parent = document.getElementById('pdf-render');
+          const parentRect = parent.getBoundingClientRect();
+
+          // Adjust scale to fit width
+          const widthScale = parentRect.width / viewport.width;
+          const adjustedScale = scale * widthScale;
+          const adjustedViewport = page.getViewport({ scale: adjustedScale });
+
+          // Set canvas dimensions
+          canvas.height = adjustedViewport.height;
+          canvas.width = adjustedViewport.width;
+
+          // Render PDF page
+          const renderContext = {
+            canvasContext: ctx,
+            viewport: adjustedViewport
+          };
+
+          const renderTask = page.render(renderContext);
+
+          // Add hotspots after rendering
+          renderTask.promise.then(function () {
+            pageRendering = false;
+
+            // If there's a page pending, render it
+            if (pageNumPending !== null) {
+              renderPage(pageNumPending);
+              pageNumPending = null;
+            }
+
+            // Add hotspots for this page
+            addHotspots(num, adjustedViewport);
+
+            // Update zoom level display
+            document.getElementById('zoom-level').textContent = `${Math.round(scale * 100)}%`;
+
+          }).catch(function (error) {
+            console.error('Error rendering page:', error);
+          });
+        });
+      }
+
+      // Add interactive hotspots to the PDF
+      function addHotspots(pageNumber, viewport) {
+        const pdfContainer = document.getElementById('pdf-container');
+        const pdfRender = document.getElementById('pdf-render');
+        const canvasRect = canvas.getBoundingClientRect();
+
+        // Filter hotspots for current page
+        const pageHotspots = hotspots.filter(spot => spot[0] === pageNumber);
+
+        pageHotspots.forEach(spot => {
+          const [page, x, y, width, height, tooltipId] = spot;
+
+          // Calculate position based on viewport
+          const dotX = x * viewport.width;
+          const dotY = y * viewport.height;
+
+          // Create pulsing dot
+          const dot = document.createElement('div');
+          dot.className = 'pulse-dot';
+          dot.style.left = `${dotX}px`;
+          dot.style.top = `${dotY}px`;
+          dot.dataset.tooltip = tooltipId;
+
+          // Create tooltip container
+          const tooltip = document.createElement('div');
+          tooltip.className = 'tooltip-container bg-white rounded-lg shadow-lg p-4';
+          tooltip.id = `tooltip-${tooltipId}`;
+
+          // Get tooltip content from template
+          const tooltipContent = document.getElementById(tooltipId).cloneNode(true);
+          tooltipContent.classList.remove('hidden');
+          tooltip.appendChild(tooltipContent);
+
+          // Add arrow to tooltip
+          const arrow = document.createElement('div');
+          arrow.className = 'tooltip-arrow tooltip-arrow-up';
+          tooltip.appendChild(arrow);
+
+          // Add tooltip to container
+          pdfRender.appendChild(dot);
+          pdfContainer.appendChild(tooltip);
+
+          // Position tooltip (initially hidden)
+          positionTooltip(dot, tooltip);
+
+          // Add event listeners
+          dot.addEventListener('click', function (e) {
+            e.stopPropagation();
+
+            // Hide all other tooltips
+            document.querySelectorAll('.tooltip-container').forEach(t => {
+              if (t !== tooltip) t.classList.remove('visible');
+            });
+
+            // Toggle this tooltip
+            tooltip.classList.toggle('visible');
+
+            // Position tooltip
+            positionTooltip(dot, tooltip);
+          });
+
+          // Close tooltip when clicking elsewhere
+          document.addEventListener('click', function (e) {
+            if (!tooltip.contains(e.target) && e.target !== dot) {
+              tooltip.classList.remove('visible');
+            }
+          });
+
+          // For mobile: also show modal on click
+          dot.addEventListener('click', function () {
+            if (window.innerWidth < 768) {
+              showModal(tooltipId);
+            }
+          });
+        });
+      }
+
+      // Position tooltip relative to dot
+      function positionTooltip(dot, tooltip) {
+        const dotRect = dot.getBoundingClientRect();
+        const pdfContainer = document.getElementById('pdf-container');
+        const containerRect = pdfContainer.getBoundingClientRect();
+
+        // Calculate position
+        const dotCenterX = dotRect.left + dotRect.width / 2 - containerRect.left;
+        const dotCenterY = dotRect.top + dotRect.height / 2 - containerRect.top;
+
+        // Default position (above dot)
+        let tooltipX = dotCenterX - tooltip.offsetWidth / 2;
+        let tooltipY = dotCenterY - tooltip.offsetHeight - 15;
+        let arrowClass = 'tooltip-arrow tooltip-arrow-down';
+
+        // Check if tooltip would go off the top
+        if (tooltipY < 10) {
+          // Position below dot
+          tooltipY = dotCenterY + 15;
+          arrowClass = 'tooltip-arrow tooltip-arrow-up';
+        }
+
+        // Check if tooltip would go off the sides
+        if (tooltipX < 10) {
+          tooltipX = 10;
+        } else if (tooltipX + tooltip.offsetWidth > containerRect.width - 10) {
+          tooltipX = containerRect.width - tooltip.offsetWidth - 10;
+        }
+
+        // Update tooltip position
+        tooltip.style.left = `${tooltipX}px`;
+        tooltip.style.top = `${tooltipY}px`;
+
+        // Update arrow
+        const arrow = tooltip.querySelector('.tooltip-arrow');
+        arrow.className = arrowClass;
+      }
+
+      // Show modal with tooltip content
+      function showModal(tooltipId) {
+        const modal = document.getElementById('info-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
+
+        // Get content from tooltip
+        const tooltipContent = document.getElementById(tooltipId);
+        const title = tooltipContent.querySelector('h4').textContent;
+
+        // Set modal content
+        modalTitle.textContent = title;
+        modalContent.innerHTML = tooltipContent.innerHTML;
+        modalContent.querySelector('h4').remove(); // Remove duplicate title
+
+        // Show modal
+        modal.classList.add('visible');
+      }
+
+      // Close modal
+      function closeModal() {
+        const modal = document.getElementById('info-modal');
+        modal.classList.remove('visible');
+      }
+
+      // Queue rendering of a page
+      function queueRenderPage(num) {
+        if (pageRendering) {
+          pageNumPending = num;
+        } else {
+          renderPage(num);
+        }
+      }
+
+      // Go to previous page
+      function onPrevPage() {
+        if (pageNum <= 1) return;
+        pageNum--;
+        queueRenderPage(pageNum);
+      }
+
+      // Go to next page
+      function onNextPage() {
+        if (pageNum >= pdfDoc.numPages) return;
+        pageNum++;
+        queueRenderPage(pageNum);
+      }
+
+      // Zoom in
+      function zoomIn() {
+        if (scale >= 3.0) return;
+        scale += 0.25;
+        queueRenderPage(pageNum);
+      }
+
+      // Zoom out
+      function zoomOut() {
+        if (scale <= 0.5) return;
+        scale -= 0.25;
+        queueRenderPage(pageNum);
+      }
+
+      // Initialize PDF viewer
+      initPDF();
+
+      // Add event listeners for navigation
+      document.getElementById('prev-page').addEventListener('click', onPrevPage);
+      document.getElementById('next-page').addEventListener('click', onNextPage);
+      document.getElementById('zoom-in').addEventListener('click', zoomIn);
+      document.getElementById('zoom-out').addEventListener('click', zoomOut);
+      document.getElementById('close-modal').addEventListener('click', closeModal);
+      document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+
+      // FAQ toggle functionality
+      document.querySelectorAll('.faq-toggle').forEach(toggle => {
+        toggle.addEventListener('click', function () {
+          const content = this.nextElementSibling;
+          const icon = this.querySelector('.faq-icon');
+
+          // Toggle content visibility
+          content.classList.toggle('hidden');
+
+          // Rotate icon
+          if (content.classList.contains('hidden')) {
+            icon.style.transform = 'rotate(0deg)';
+          } else {
+            icon.style.transform = 'rotate(180deg)';
+          }
+        });
+      });
+
+      // Handle window resize
+      let resizeTimeout;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function () {
+          renderPage(pageNum);
+        }, 200);
+      });
+
+      // Download sample ballot
+      document.getElementById('download-ballot').addEventListener('click', function () {
+        // In a real application, this would download the actual PDF
+        alert('In a real application, this would download the sample ballot PDF.');
+      });
+    });
+  </script>
+  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'963cfae99238e7aa',t:'MTc1MzI5MjYwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
