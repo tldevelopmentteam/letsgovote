@@ -17,6 +17,49 @@
       background-color: #f0f7ff;
     }
 
+    .language-dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+
+    .language-dropdown:hover .language-dropdown-content {
+      display: block;
+    }
+
+    .language-option {
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .language-option:hover {
+      background-color: #f0f7ff;
+    }
+
+    /* Fixed language toggle */
+    .fixed-language-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .fixed-language-toggle.scrolled {
+      top: 10px;
+      right: 10px;
+      transform: scale(0.9);
+    }
+
     .cursive {
       font-family: 'Dancing Script', cursive;
     }
@@ -342,6 +385,25 @@
     </div>
   </nav>
 
+  <!-- Fixed Language Toggle -->
+  <div class="fixed-language-toggle">
+    <div class="language-dropdown">
+      <button
+        class="flex items-center space-x-1 bg-white text-blue-800 font-medium py-2 px-4 rounded-full shadow-lg hover:bg-blue-50 transition duration-300">
+        <span>🌐</span>
+        <span class="current-language">English</span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div class="language-dropdown-content">
+        <a href="#" class="language-option" data-lang="en">English</a>
+        <a href="#" class="language-option" data-lang="es">Español</a>
+        <a href="#" class="language-option" data-lang="fr">Tiếng Việt</a>
+        <a href="#" class="language-option" data-lang="zh">中文</a>
+      </div>
+    </div>
+  </div>
   <!-- Page Header -->
   <div class="bg-black text-white relative overflow-hidden">
     <div class="container mx-auto px-4 my-16">
@@ -1655,7 +1717,20 @@
       </div>
     </div>
   </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Fixed language toggle behavior
+      const fixedLanguageToggle = document.querySelector('.fixed-language-toggle');
 
+      window.addEventListener('scroll', function () {
+        if (window.scrollY > 100) {
+          fixedLanguageToggle.classList.add('scrolled');
+        } else {
+          fixedLanguageToggle.classList.remove('scrolled');
+        }
+      });
+    });
+  </script>
   <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'963cfae99238e7aa',t:'MTc1MzI5MjYwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
 
